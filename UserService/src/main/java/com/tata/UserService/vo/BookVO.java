@@ -57,6 +57,21 @@ public class BookVO {
 		this.availableCopies = availableCopies;
 	}
 
+	public BookVO() {
+		super();
+	}
+
+	public BookVO(Integer bookId, Integer isbn, String title, String author, Integer totalCopies,
+			Integer availableCopies) {
+		super();
+		this.bookId = bookId;
+		this.isbn = isbn;
+		this.title = title;
+		this.author = author;
+		this.totalCopies = totalCopies;
+		this.availableCopies = availableCopies;
+	}
+
 	@Override
 	public String toString() {
 		return "BookVO [bookId=" + bookId + ", isbn=" + isbn + ", title=" + title + ", author=" + author

@@ -34,6 +34,9 @@ public class UserService {
 	}
 
 	public UserVo findById(Integer userId) {
+		if (userId == null) {
+			throw new IllegalArgumentException("User ID cannot be null");
+		}
 		Optional<User> user = userRepo.findById(userId);
 		if (user.isEmpty()) {
 			return null;
@@ -41,9 +44,13 @@ public class UserService {
 		return userBuilder.convertUserToUserVo(user.get());
 	}
 
-	public void saveUser(UserVo userVo) {
+	public User saveUser(UserVo userVo) {
+		if (userVo == null) {
+			throw new IllegalArgumentException("User ID cannot be null");
+		}
 		User user = userBuilder.convertUserVoToUser(userVo);
 		userRepo.save(user);
+		return user;
 	}
 
 	public Boolean checkIfEmailExists(String emailId) {
@@ -60,6 +67,9 @@ public class UserService {
 	}
 
 	public void deleteById(Integer userId) {
+		if (userId == null) {
+			throw new IllegalArgumentException("User ID cannot be null");
+		}
 		userRepo.deleteById(userId);
 
 	}
