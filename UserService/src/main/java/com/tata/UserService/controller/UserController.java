@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -150,7 +148,6 @@ public class UserController {
 					.getForEntity("http://BOOK-SERVICE/book/getById?isdnNo=" + bookVO.getIsbn(), BookVO.class);
 			BookVO bookVo = res.getBody();
 
-
 			if (bookVo == null || bookVo.getBookId() == null || bookVo.getAvailableCopies() == 0) {
 				return commonMethods.errorMsg(MessageConstant.bookNotFound);
 			}
@@ -207,13 +204,4 @@ public class UserController {
 
 	}
 
-	@GetMapping("/test")
-	public String test(@RequestParam Integer id, @RequestParam String name,
-			@Valid @RequestBody BookTransactionVO bookVO) {
-
-			String str = null;
-			str.charAt(1);
-			return "ID - " + id + "Name - " + name;
-		
-	}
 }

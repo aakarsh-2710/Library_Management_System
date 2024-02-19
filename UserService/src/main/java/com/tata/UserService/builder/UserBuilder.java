@@ -16,18 +16,18 @@ import com.tata.UserService.vo.UserVo;
 public class UserBuilder {
 
 	public List<UserVo> convertUserListToUserVoList(List<User> users) {
-
 		List<UserVo> list = new ArrayList<>();
-		for (User user : users) {
-			UserVo userVo = new UserVo();
-			userVo.setEmailId(user.getEmailId());
-			userVo.setPhoneNo(user.getPhoneNo());
-			userVo.setUserId(user.getUserId());
-			userVo.setUserName(user.getUserName());
-			userVo.setBooks(getSetOfBookVo(user.getBooks()));
-			list.add(userVo);
+		if (users != null) {
+			for (User user : users) {
+				UserVo userVo = new UserVo();
+				userVo.setEmailId(user.getEmailId());
+				userVo.setPhoneNo(user.getPhoneNo());
+				userVo.setUserId(user.getUserId());
+				userVo.setUserName(user.getUserName());
+				userVo.setBooks(getSetOfBookVo(user.getBooks()));
+				list.add(userVo);
+			}
 		}
-
 		return list;
 	}
 
