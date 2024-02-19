@@ -13,10 +13,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,12 +24,10 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.tata.Entity.Book;
 import com.tata.Entity.User;
 import com.tata.UserService.builder.UserBuilder;
 import com.tata.UserService.repository.UserRepo;
 import com.tata.UserService.service.UserService;
-import com.tata.UserService.vo.BookVO;
 import com.tata.UserService.vo.UserVo;
 
 @SpringBootTest
@@ -55,8 +51,8 @@ class UserServiceTest {
 	void testFindAllUsers() {
 		// Mocking the repository response
 
-		User user1 = createUser(1, "John Doe", 1234567890L, "john.doe@example.com");
-		User user2 = createUser(2, "Jane Smith", 9876543210L, "jane.smith@example.com");
+		User user1 = CommonMethodsTest.createUser(1, "John Doe", 1234567890L, "john.doe@example.com");
+		User user2 = CommonMethodsTest.createUser(2, "Jane Smith", 9876543210L, "jane.smith@example.com");
 		List<User> users = new ArrayList<User>();
 		users.add(user1);
 		users.add(user2);
@@ -82,7 +78,7 @@ class UserServiceTest {
 
 	@Test
 	void testFindAllUsers_UserProperties() {
-		User user1 = createUser(1, "John Doe", 1234567890L, "john.doe@example.com");
+		User user1 = CommonMethodsTest.createUser(1, "John Doe", 1234567890L, "john.doe@example.com");
 		List<User> users = new ArrayList<User>();
 		users.add(user1);
 		when(userRepo.findAll()).thenReturn(users);
@@ -101,7 +97,7 @@ class UserServiceTest {
 	@Test
 	void testFindById_UserFound() {
 		// Mocking the repository response for a user found
-		User user = createUser(1, "John Doe", 1234567890L, "john.doe@example.com");
+		User user = CommonMethodsTest.createUser(1, "John Doe", 1234567890L, "john.doe@example.com");
 		when(userRepo.findById(1)).thenReturn(Optional.of(user));
 
 		// Call the service method
@@ -134,7 +130,7 @@ class UserServiceTest {
 	@Test
 	void testSaveUser_successfulSave() {
 		// Mocking the builder response
-		UserVo userVO = createUserVO(1, "John Doe", 1234567890L, "john.doe@example.com");
+		UserVo userVO = CommonMethodsTest.createUserVO(1, "John Doe", 1234567890L, "john.doe@example.com");
 
 		// Call the service method
 		User user = userService.saveUser(userVO);
@@ -179,63 +175,4 @@ class UserServiceTest {
 		verify(userRepo, never()).deleteById(any());
 	}
 
-	private User createUser(Integer userId, String userName, Long phoneNo, String emailId) {
-		User user = new User();
-		user.setUserId(userId);
-		user.setUserName(userName);
-		user.setPhoneNo(phoneNo);
-		user.setEmailId(emailId);
-
-		// Adding some sample books to the user's set of books
-		Set<Book> books = new HashSet<>();
-		books.add(createBook(1, 123456, "Sample Book 1", "Author 1", 100, 50));
-		books.add(createBook(2, 789012, "Sample Book 2", "Author 2", 150, 75));
-
-		user.setBooks(books);
-
-		return user;
-	}
-
-	private UserVo createUserVO(Integer userId, String userName, Long phoneNo, String emailId) {
-		UserVo user = new UserVo();
-		user.setUserId(userId);
-		user.setUserName(userName);
-		user.setPhoneNo(phoneNo);
-		user.setEmailId(emailId);
-
-		// Adding some sample books to the user's set of books
-		Set<BookVO> books = new HashSet<>();
-		books.add(createBookVO(1, 123456, "Sample Book 1", "Author 1", 100, 50));
-		books.add(createBookVO(2, 789012, "Sample Book 2", "Author 2", 150, 75));
-
-		user.setBooks(books);
-
-		return user;
-	}
-
-	private Book createBook(Integer bookId, Integer isbn, String title, String author, Integer totalCopies,
-			Integer availableCopies) {
-		Book book = new Book();
-		book.setBookId(bookId);
-		book.setIsbn(isbn);
-		book.setTitle(title);
-		book.setAuthor(author);
-		book.setTotalCopies(totalCopies);
-		book.setAvailableCopies(availableCopies);
-
-		return book;
-	}
-
-	private BookVO createBookVO(Integer bookId, Integer isbn, String title, String author, Integer totalCopies,
-			Integer availableCopies) {
-		BookVO book = new BookVO();
-		book.setBookId(bookId);
-		book.setIsbn(isbn);
-		book.setTitle(title);
-		book.setAuthor(author);
-		book.setTotalCopies(totalCopies);
-		book.setAvailableCopies(availableCopies);
-
-		return book;
-	}
 }
