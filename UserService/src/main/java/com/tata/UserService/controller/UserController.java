@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
 import com.tata.UserService.constant.MessageConstant;
+import com.tata.UserService.service.BookService;
 import com.tata.UserService.service.UserService;
 import com.tata.UserService.util.CommonMethods;
 import com.tata.UserService.vo.BookTransactionVO;
@@ -30,22 +30,17 @@ import jakarta.validation.Valid;
 @RequestMapping("/user")
 public class UserController {
 
-	// we can ceate immutable objectd with constructor dependencies via using final
-	// keyword
-	// i.e private final UserService userService
-
 	private UserService userService;
 
-	private RestTemplate restTemplate;
-
+	private BookService bookService;
 	private CommonMethods commonMethods;
 
 	@Autowired
-	public UserController(UserService userService, RestTemplate restTemplate, CommonMethods commonMethods) {
+	public UserController(UserService userService, CommonMethods commonMethods, BookService bookService) {
 		super();
 		this.userService = userService;
-		this.restTemplate = restTemplate;
 		this.commonMethods = commonMethods;
+		this.bookService = bookService;
 	}
 
 	@GetMapping("/getAll")
@@ -104,7 +99,8 @@ public class UserController {
 				// All books taken by that user should be returned
 				for (BookVO bookVO : books) {
 					bookVO.setAvailableCopies(bookVO.getAvailableCopies() + 1);
-					restTemplate.put("http://BOOK-SERVICE/book/update", bookVO);
+					bookService.updateBook(bookVO);
+					// restTemplate.put("http://BOOK-SERVICE/book/update", bookVO);
 				}
 
 				// when user is deleted its entry should be deleted from user_book table
@@ -144,8 +140,7 @@ public class UserController {
 //			if (Boolean.TRUE.equals(checkIfBookIsAlreadyAssigned(bookVO, userVo))) {
 //				return commonMethods.errorMsg(MessageConstant.bookAlreadyAssigned);
 //			}
-			ResponseEntity<BookVO> res = restTemplate
-					.getForEntity("http://BOOK-SERVICE/book/getById?isdnNo=" + bookVO.getIsbn(), BookVO.class);
+			ResponseEntity<BookVO> res = bookService.getBook(bookVO.getIsbn());
 			BookVO bookVo = res.getBody();
 
 			if (bookVo == null || bookVo.getBookId() == null || bookVo.getAvailableCopies() == 0) {
@@ -155,7 +150,7 @@ public class UserController {
 			bookVo.setAvailableCopies(bookVo.getAvailableCopies() - 1);
 
 			userService.assignBookToUser(userVo, bookVo);
-			restTemplate.put("http://BOOK-SERVICE/book/update", bookVo);
+			bookService.updateBook(bookVo);
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
@@ -186,8 +181,7 @@ public class UserController {
 				return commonMethods.errorMsg(MessageConstant.userNotFound);
 			}
 
-			ResponseEntity<BookVO> res = restTemplate
-					.getForEntity("http://BOOK-SERVICE/book/getById?isdnNo=" + bookVO.getIsbn(), BookVO.class);
+			ResponseEntity<BookVO> res = bookService.getBook(bookVO.getIsbn());
 			BookVO bookVo = res.getBody();
 
 			if (bookVo == null || bookVo.getBookId() == null) {
@@ -196,7 +190,7 @@ public class UserController {
 
 			bookVo.setAvailableCopies(bookVo.getAvailableCopies() + 1);
 			userService.unAssignBookToUser(userVo, bookVo);
-			restTemplate.put("http://BOOK-SERVICE/book/update", bookVo);
+			bookService.updateBook(bookVo);
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
