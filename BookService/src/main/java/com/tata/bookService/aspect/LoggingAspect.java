@@ -21,6 +21,13 @@ public class LoggingAspect {
 
 	private static final Log logger = LogFactory.getLog(LoggingAspect.class);
 
+	// @Before("execution(* com.tata.bookService.*.*.*(..)) ")
+	/*
+	 * *: Matches any return type. com.tata.bookService.*: Matches any class in the
+	 * com.tata.bookService package. *: Matches any class name. *: Matches any
+	 * method name. *(..): Matches any number of arguments of any type.
+	 * 
+	 */
 	@Before("execution(* com.tata.bookService.*.*.*(..)) ")
 	public void logBeforeMethodExecution(JoinPoint joinPoint) {
 		Signature signature = joinPoint.getSignature();

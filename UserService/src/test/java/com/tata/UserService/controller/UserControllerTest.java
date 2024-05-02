@@ -24,11 +24,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.client.RestTemplate;
 
 import com.tata.UserService.CommonMethodsTest;
 import com.tata.UserService.constant.MessageConstant;
 import com.tata.UserService.exception.GlobalExceptionHandler;
+import com.tata.UserService.service.BookService;
 import com.tata.UserService.service.UserService;
 import com.tata.UserService.util.CommonMethods;
 import com.tata.UserService.vo.UserVo;
@@ -41,7 +41,7 @@ class UserControllerTest {
 	private UserService userService;
 
 	@Mock
-	private RestTemplate restTemplate;
+	private BookService bookService;
 
 	@Mock
 	private CommonMethods commonMethods;
@@ -58,7 +58,7 @@ class UserControllerTest {
 	@BeforeEach
 	void setUp() {
 		MockitoAnnotations.openMocks(this);
-		mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService, restTemplate, commonMethods)).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(new UserController(userService, commonMethods, bookService)).build();
 	}
 
 	@Test
